@@ -95,6 +95,52 @@ def thresh(greyscaleImage, threshNum):
     # after running through each pixel, return the image that now consists of only black and white pixels (1 and 0)
     return imageToReturn
 
+def edgeDetect(imageMatrix, convoluteMatrix):
+    pad_length = (len(convoluteMatrix[0])-1)/2
+    paddedImage = np.pad(imageMatrix, int(pad_length), mode="constant")
+    finalImage = imageMatrix
+    tx = int(pad_length)
+    ty = int(pad_length)
+    for row in imageMatrix:
+        for pixel in row:
+            # kernel = convoluteMatrix
+            x=-int(pad_length)
+            y=-int(pad_length)
+            oneValue = 0
+            zeroValue = 0
+            try:
+                for krow in range(0,len(convoluteMatrix)):
+                    for kpixel in range(0,len(convoluteMatrix)):
+                        if(paddedImage[tx+x][ty+y] == 1):
+                            oneValue += 1
+                        elif(paddedImage[tx+x][ty+y] == 0):
+                            zeroValue += 1
+                        else:
+                            print(paddedImage[tx+x][ty+y])
+                        x = x + 1
+                    y = y + 1
+                    x=-int(pad_length)   
+                if(5 <= oneValue <= 7):
+                    finalImage[tx][ty] = 1
+                else:
+                    finalImage[tx][ty] = 0
+                # totalDot = 0
+                # for i in range(0, len(convoluteMatrix)):
+                #     dotInitial = np.dot(kernel[i], convoluteMatrix[i])
+                #     totalDot += dotInitial/divisible
+                print(f"Edge Detection: {round(100*tx/imageMatrix.shape[0],2)}% Complete")
+                # finalImage[tx][ty] = totalDot
+            except IndexError:
+                break
+            
+            ty = ty + 1 
+        tx = tx + 1  
+        ty = int(pad_length)
+        # plt.imshow(finalImage, cmap=plt.get_cmap('gray'), vmin=0, vmax=1)
+        # plt.show()
+    return finalImage
+
+
 def sobel(imageMatrix):
     finalFinalImage = imageMatrix
     gxOperator = np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]])
@@ -108,19 +154,21 @@ def sobel(imageMatrix):
             finalFinalImage[initXVal][initYVal] = math.sqrt((gx[initXVal][initYVal]**2) + (gy[initXVal][initYVal]**2))
             initYVal += 1
         initXVal += 1
-        print(f"Sobel: {round(100*initXVal/gx.shape[0],2)}% Complete")        
+        print(f"Sobel: {round(100*initXVal/gx.shape[0],2)}% Complete")       
+    return finalFinalImage
            
         
-sk = [[1,4,6,4,1],[4,16,24,16,4],[6,24,36,24,6],[4,16,24,16,4],[1,4,6,4,1]]
-# sk = [[1,1,1],[1,1,1],[1,1,1]]
+gaussianBlur = [[1,4,6,4,1],[4,16,24,16,4],[6,24,36,24,6],[4,16,24,16,4],[1,4,6,4,1]]
+sk = [[1,1,1],[1,1,1],[1,1,1]]
 #Convert provided image to greyscale
 greyscalematrix = greyscaleConverter(variable)
 # take the greyscale image and blur it using gaussian blur function and then normalize it
-blurred = convolution(greyscalematrix,sk,12)
+blurred = convolution(greyscalematrix,gaussianBlur,9)
 # run the threshold function on the blurred image with a provided threshold
-finalFinalImage = thresh(blurred, 0.8)
+th = thresh(blurred, 0.9)
+finalFinalImage = edgeDetect(th,sk)
 #run the sobel operator on the blurred image
-# finalFinalImage = sobel(blurred)      
+# finalFinalImage = sobel(th)      
 #show the final image. Make sure matplot interprets the image in greyscale (0-1) format, instead of RGB (0-255,0-255,0-255)  
 plt.imshow(finalFinalImage, cmap=plt.get_cmap('gray'), vmin=0, vmax=1)
 # Show the plot
