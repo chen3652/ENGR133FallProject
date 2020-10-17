@@ -33,16 +33,22 @@ try:
 # If the file can't be found
 except FileNotFoundError:
     # Print a nice error message and end the program
-    print("Sorry, I couldn't find that file in this direcotry!")
+    print("Sorry, I couldn't find that file in this directory!")
     #End the program:
     sys.exit()  
 # Get a threshold value from the user and convert to float
 try:
-    threshold = float(input("Please input the threshold for detemingin edges on a scale of 0-1: ")) #matplot will read the image into an array
-# If the value isn't a float or another error occurs
+    threshold = float(input("Please input the threshold for determining edges on a scale of 0-1: ")) #matplot will read the image into an array
+# If the value isn't a float or another error occurscoins.png
+
 except:
     # Print a nice error message and end the program
     print("Sorry, I couldn't find a number in that!")
+    #End the program:
+    sys.exit()  
+# Check to see if threshold is in an appropriate range
+if (threshold > 1 or threshold < 0):
+    print("Sorry, please input a number between 0 and 1.")
     #End the program:
     sys.exit()  
 #Define a function that will convert the image to greyscale
