@@ -54,6 +54,12 @@ if (threshold > 1 or threshold < 0):
 #Define a function that will convert the image to greyscale
 def greyscaleConverter(colorMatrix): #dotproduct will convert image into greyscale
     dot = np.dot(colorMatrix[...,:3], [0.2126, 0.7152, 0.0722]) #Formula for converting into greyscale, takes each term and calculates dotproduct
+    #show the final image. Make sure matplot interprets the image in greyscale (0-1) format, instead of RGB (0-255,0-255,0-255)  
+    plt.imshow(dot, cmap=plt.get_cmap('gray'), vmin=0, vmax=1)
+    # Turn off the axis
+    plt.axis('off')
+    # Save the file to output.png
+    plt.savefig("GreyImage.png", bbox_inches='tight')
     return dot #returns dot product
 #define a function to generally convolutean image and a matrix, and then normalize it with a "divisible" factor
 def convolution(imageMatrix, convoluteMatrix, divisible):
@@ -108,6 +114,12 @@ def convolution(imageMatrix, convoluteMatrix, divisible):
         tx = tx + 1  
         # at the end of each row, reset the column counter to the start of the image
         ty = int(pad_length)
+    #show the final image. Make sure matplot interprets the image in greyscale (0-1) format, instead of RGB (0-255,0-255,0-255)  
+    plt.imshow(finalImage, cmap=plt.get_cmap('gray'), vmin=0, vmax=1)
+    # Turn off the axis
+    plt.axis('off')
+    # Save the file to output.png
+    plt.savefig("ConvolutionOutput.png", bbox_inches='tight')
     # return the final image that has now had each pixel/kernel convoluted with a convolute Matrix
     return finalImage
                 
@@ -134,6 +146,12 @@ def thresh(greyscaleImage, threshNum):
         initXVal += 1 # increment the x counter
         # print the % complete
         print(f"Threshold: {round(100*initXVal/greyscaleImage.shape[0],2)}% Complete")
+    #show the final image. Make sure matplot interprets the image in greyscale (0-1) format, instead of RGB (0-255,0-255,0-255)  
+    plt.imshow(imageToReturn, cmap=plt.get_cmap('gray'), vmin=0, vmax=1)
+    # Turn off the axis
+    plt.axis('off')
+    # Save the file to output.png
+    plt.savefig("ThresholdOutput.png", bbox_inches='tight')
     # after running through each pixel, return the image that now consists of only black and white pixels (1 and 0)
     return imageToReturn
 
@@ -189,7 +207,7 @@ def edgeDetect(imageMatrix, convoluteMatrix):
         # increment the row counter
         tx = tx + 1  
         # at the end of each row, reset the column counter to the start of the image
-        ty = int(pad_length)
+        ty = int(pad_length)    
     # return the final image that now has edge detection applied to it
     return finalImage
 # Gaussian blur matrix for convolution
@@ -204,12 +222,12 @@ blurred = convolution(greyscalematrix,gaussianBlur,9)
 th = thresh(blurred, threshold)
 # Run edge detection on threshold image
 finalFinalImage = edgeDetect(th,sk)  
-#plot the final image. Make sure matplot interprets the image in greyscale (0-1) format, instead of RGB (0-255,0-255,0-255)  
-img = plt.imshow(finalFinalImage, cmap=plt.get_cmap('gray'), vmin=0, vmax=1)
+#show the final image. Make sure matplot interprets the image in greyscale (0-1) format, instead of RGB (0-255,0-255,0-255)  
+plt.imshow(finalFinalImage, cmap=plt.get_cmap('gray'), vmin=0, vmax=1)
 # Turn off the axis
 plt.axis('off')
 # Save the file to output.png
-plt.savefig("output.png", bbox_inches='tight')
+plt.savefig("FinalOutput.png", bbox_inches='tight')
 
 
 '''
