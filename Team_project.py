@@ -204,10 +204,12 @@ blurred = convolution(greyscalematrix,gaussianBlur,9)
 th = thresh(blurred, threshold)
 # Run edge detection on threshold image
 finalFinalImage = edgeDetect(th,sk)  
-#show the final image. Make sure matplot interprets the image in greyscale (0-1) format, instead of RGB (0-255,0-255,0-255)  
-plt.imshow(finalFinalImage, cmap=plt.get_cmap('gray'), vmin=0, vmax=1)
-# Show the plot
-plt.show()
+#plot the final image. Make sure matplot interprets the image in greyscale (0-1) format, instead of RGB (0-255,0-255,0-255)  
+img = plt.imshow(finalFinalImage, cmap=plt.get_cmap('gray'), vmin=0, vmax=1)
+# Turn off the axis
+plt.axis('off')
+# Save the file to output.png
+plt.savefig("output.png", bbox_inches='tight')
 
 
 '''
